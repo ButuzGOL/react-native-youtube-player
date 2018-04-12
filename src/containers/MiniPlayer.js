@@ -5,7 +5,8 @@ import {
   View,
   TouchableOpacity,
   Dimensions,
-  Platform
+  Platform,
+  AsyncStorage,
 } from 'react-native';
 import Button from 'react-native-button';
 import {Actions} from 'react-native-router-flux';
@@ -24,6 +25,11 @@ import _ from 'underscore';
 
 let {height, width} = Dimensions.get('window');
 
+async function saveSongProgress(song, time) {
+  await AsyncStorage.removeItem(`Song:${song.id}`);
+  await AsyncStorage.setItem(`Song:${song.id}`, time.toString());
+}
+
 class Player extends Component {
   constructor(props){
     super(props);
@@ -32,6 +38,13 @@ class Player extends Component {
       muted: false,
       originalPlaylist: null
     };
+
+
+
+    this.debouncedSetTimeToStorage = _.debounce(async (params) => {
+      const song = this.props.songs[this.props.songIndex];
+      await saveSongProgress(song, params);
+    }, 250);
   }
 
   setPlayingSong(duration) {
@@ -98,17 +111,27 @@ class Player extends Component {
   }
 
   setTime(params) {
+      this.debouncedSetTimeToStorage(params.currentTime);
       this.props.setSongProgress(params.currentTime);
       this.setState({currentTime: params.currentTime});
   }
 
-  onLoad(params) {
-    let duration = params.duration / 2; //react-native-video bug
+  async onLoad(params) {
+    const song = this.props.songs[this.props.songIndex];
+    try {
+      const value = await AsyncStorage.getItem(`Song:${song.id}`);
+      if (value) {
+        this.refs.audio.seek(Math.floor(Number(value)));
+      }
+    } catch(e) {}
+    let duration = params.duration;
     this.props.setSongDuration(duration);
     this.setPlayingSong(duration);
   }
 
-  onSlidingComplete(time){
+  async onSlidingComplete(time){
+    const song = this.props.songs[0];
+    await saveSongProgress(song, time);
     this.refs.audio.seek(time);
   }
 
@@ -247,4 +270,4 @@ function mapStateToProps(store) {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Player);
+export default connect(mapStateToProps, mapDispatchToProps, null, { withRef: true })(Player);

@@ -8,7 +8,7 @@ export function searchSong(query) {
   return async (dispatch) => {
     dispatch(setSearchResults([]));
     dispatch(setLoading(true));
-    let res = await fetch(`${Config.SEARCH_API_URL}${query}`);
+    let res = await fetch(query.includes('__:') ? `${Config.SEARCH_API_URL1}${query.slice(3)}` : `${Config.SEARCH_API_URL}${query}`)
     res = await res.json();
     res = await setDownloadedSongs(Utils.filterSearchResults(res));
     dispatch(setLoading(false));

@@ -31,9 +31,13 @@ class Player extends Component {
       muted: false,
       shuffle: false,
       sliding: false,
-      currentTime: 0,
+      currentTime: props.currentTime,
       minimized: true
     };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.currentTime) this.state.currentTime = nextProps.currentTime;
   }
 
   togglePlay() {
@@ -73,6 +77,7 @@ class Player extends Component {
   }
 
   onSlidingComplete(){
+    console.log('time', this.state.currentTime);
     this.props.onSlidingComplete(this.state.currentTime);
     this.setState({ sliding: false });
   }
@@ -125,8 +130,7 @@ class Player extends Component {
           onValueChange={ this.onSlidingChange.bind(this) }
           value={ songPercentage }
           songDuration={this.props.duration}
-          currentTime={this.props.currentTime}
-          disabled={true}
+          currentTime={this.state.currentTime}
         />
         <View style={ Styles.controls }>
           <ShuffleButton

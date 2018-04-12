@@ -23,14 +23,14 @@ export default class App extends Component {
     return (
      <Provider store={store}>
       <View style={{flex: 1}}>
-      <MiniPlayer />
+      <MiniPlayer ref={(ref) => { this.miniPlayerRef = ref; }} />
        <RouterWithRedux>
          <Scene key="root">
           <Scene key="home" initial tabs={true}>
               <Scene key="search" component={Search} title="Search" duration={0} icon={TabIcon} animation="fade"/>
               <Scene key="download" component={Downloads} initial title="Downloads" icon={TabIcon} duration={0} animation="fade"/>
           </Scene>
-          <Scene key="player" component={Player} hideNavBar hideTabBar direction="vertical"/>
+          <Scene key="player" onSlidingComplete={(value) => this.miniPlayerRef.getWrappedInstance().onSlidingComplete(value) } component={Player} hideNavBar hideTabBar direction="vertical"/>
          </Scene>
        </RouterWithRedux>
        </View>

@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
     fontFamily: "Helvetica Neue",
     marginBottom: 10,
     marginTop: 13,
-    fontSize: 19
+    fontSize: 6
   },
   albumTitle: {
     color: "#BBB",
@@ -161,8 +161,8 @@ const styles = StyleSheet.create({
     color: "#333"
   },
   songTitleText: {
-    fontSize: 12,
-    color: "#c8c3c3"
+    fontSize: 6,
+    color: "#333"
   },
   noPaddingHorizontal: {
     paddingHorizontal: 0

@@ -2,6 +2,7 @@ import {AsyncStorage} from 'react-native';
 import Config from '../config';
 import RNFS from 'react-native-fs';
 import _ from 'underscore';
+import { API_URL } from '../config';
 
 function withLeadingZero(amount){
   if (amount < 10 ){
@@ -36,13 +37,14 @@ export function getSongName(contentDescription) {
 
 export function filterSearchResults(res) {
   return res.items.map(item => {
+    const id = item.id.videoId || item.id;
     return {
-      id: item.id.videoId,
+      id,
       artist: item.snippet.channelTitle,
       title: item.snippet.title,
       thumb: item.snippet.thumbnails.high.url,
-      path: getSongUrl(item.id.videoId),
-      key: item.id.videoId
+      path: getSongUrl(id),
+      key: id
     }
   });
 }
@@ -66,6 +68,7 @@ export async function getSongFromStorage(id) {
 export async function getSongInfo(path, recoverId) {
   let res = await fetch(recoverId? getSongUrl(recoverId): path);
   let data = await res.json();
+  data.url = API_URL + data.url;
   if(data.status) return data;
   throw data.error;
 }

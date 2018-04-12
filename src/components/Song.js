@@ -24,6 +24,10 @@ let {height, width} = Dimensions.get('window');
 class Song extends Component {
   state = {songImage: "../img/music.jpg", downloading: false}
   swipeBtns = [{
+    text: 'Play',
+    backgroundColor: 'green',
+    onPress: () => { this.props.onPress() }
+  },{
       text: 'Delete',
       backgroundColor: 'red',
       onPress: () => { this.props.deleteMusic() }
@@ -46,14 +50,14 @@ function DownloadedSong() {
     backgroundColor= 'transparent'
     autoClose={true}
     >
-    <TouchableOpacity style={Styles.downloadSongContainer} onPress={this.props.onPress}>
+    <TouchableOpacity style={Styles.downloadSongContainer}>
       <View style={Styles.songView}>
         <Image
           source={{uri: (Platform.OS == 'android'?'file://': "") + this.props.songImage || this.state.songImage}}
           style={Styles.songTitleImage}
         />
         <View style={Styles.songTitleContainer}>
-          <Text style={Styles.songArtistText} numberOfLines={1}>{this.props.artistName || "Unknown Artist"}</Text>
+          <Text style={Styles.songArtistText} numberOfLines={1}>7777{this.props.artistName || "Unknown Artist"}</Text>
           <Text style={Styles.songTitleText} numberOfLines={1}>{this.props.songName || "Unknown Song"}</Text>
         </View>
         {renderProgressBar.call(this, true)}
@@ -96,7 +100,13 @@ function renderProgressBar(downloads) {
 
 function SearchedSong() {
   let song = this.props.searchResults[this.props.songIndex];
-  return (<TouchableOpacity style={Styles.searchSongContainer} onPress={() => this.props.onPress(song.downloaded)}>
+  return (
+    <TouchableOpacity 
+      style={Styles.searchSongContainer}
+      onPress={() => { 
+        this.props.onPress(song.downloaded);
+      }}
+    >
     <View style={[Styles.songView, {width: width - 60}]}>
       <Image
         source={{uri: this.props.songImage || this.state.songImage}}

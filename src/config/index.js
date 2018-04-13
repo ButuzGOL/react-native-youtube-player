@@ -1,4 +1,4 @@
-const YOUTUBE_API_KEY = "";
+const YOUTUBE_API_KEY = "AIzaSyCJWtmr7zLd_XKtTVoDhCWqgk7QVrBs1Vc";
 export const API_URL = "http://192.168.0.100:8888";
 export default {
   API_URL: API_URL + "?vid=",

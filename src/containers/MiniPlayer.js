@@ -137,7 +137,7 @@ class Player extends Component {
 
   onEnd() {
     this.props.setPlaying(false);
-    this.goForward();
+    // this.goForward();
   }
 
   openPlayer() {
